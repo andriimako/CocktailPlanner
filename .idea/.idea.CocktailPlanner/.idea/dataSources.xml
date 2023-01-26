@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:sqlserver://localhost:1433;database=cocktailplannerdb</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="cocktailplannerdb2@localhost" uuid="b5daf675-c82d-4607-926c-6985f9737ac0">
+      <driver-ref>sqlserver.ms</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
+      <jdbc-url>jdbc:sqlserver://localhost;database=cocktailplannerdb2</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

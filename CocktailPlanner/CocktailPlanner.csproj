@@ -24,4 +24,27 @@
       <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.11" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Cocktail\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Cocktail\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Cocktail\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Cocktail\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Cocktail\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\EventPlan\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\EventPlan\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\EventPlan\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\EventPlan\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\EventPlan\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Ingredient\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Ingredient\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Ingredient\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Ingredient\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Ingredient\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Inventory\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Inventory\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Inventory\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Inventory\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Inventory\Index.cshtml" />
+    </ItemGroup>
+
 </Project>

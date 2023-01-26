@@ -13,6 +13,7 @@ public class EventPlan
     public string Description { get; set; }
     [MaxLength(255)]
     public string Date { get; set; }
-    public virtual ICollection<Cocktail> Cocktails { get; set; } = new List<Cocktail>();
-    public virtual ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
+    public ICollection<EventPlanCocktail> EventPlanCocktails { get; set; }
+    
+    
 }

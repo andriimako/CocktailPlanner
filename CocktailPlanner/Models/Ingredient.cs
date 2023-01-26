@@ -11,9 +11,12 @@ public class Ingredient
     public string Name { get; set; }
     [Required]
     [MaxLength(255)]
-    public double Quantity { get; set; }
+    public double QuantityAvailable { get; set; }
     [Required]
     [MaxLength(255)]
     public string Unit { get; set; }
-    public virtual ICollection<Cocktail> Cocktails { get; set; } = new List<Cocktail>();
+    [Required]
+    public Boolean IsAlcoholic { get; set; }
+    public ICollection<CocktailIngredient> CocktailIngredients { get; set; }
+        
 }

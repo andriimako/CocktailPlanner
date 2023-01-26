@@ -12,5 +12,7 @@ public class Cocktail
     [MaxLength(255)]
     public string Description { get; set; }
     public byte Image { get; set; }
-    public virtual ICollection<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
+    public ICollection<CocktailIngredient> CocktailIngredients { get; set; }
+    public ICollection<EventPlanCocktail> EventPlanCocktails { get; set; }
+    
 }
