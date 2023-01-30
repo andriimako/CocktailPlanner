@@ -20,18 +20,18 @@ namespace CocktailPlanner.Controllers
         }
 
         // GET: Cocktail
-        public async Task<IActionResult> Index() 
+        public async Task<IActionResult> Index()
         {
-              return _context.Cocktails != null ? 
-                          View(await _context.Cocktails.ToListAsync()) :
-                          Problem("Entity set 'CocktailPDbContext.Cocktails'  is null.");
+            return _context.Cocktails != null
+                ? View(await _context.Cocktails.ToListAsync())
+                : Problem("Entity set 'CocktailPDbContext.Cocktails'  is null.");
         }
-        
-        public async Task<IActionResult> Listview() 
+
+        public async Task<IActionResult> Listview()
         {
-            return _context.Cocktails != null ? 
-                View(await _context.Cocktails.ToListAsync()) :
-                Problem("Entity set 'CocktailPDbContext.Cocktails'  is null.");
+            return _context.Cocktails != null
+                ? View(await _context.Cocktails.ToListAsync())
+                : Problem("Entity set 'CocktailPDbContext.Cocktails'  is null.");
         }
 
         // GET: Cocktail/Details/5
@@ -43,7 +43,7 @@ namespace CocktailPlanner.Controllers
             }
 
             var cocktail = await _context.Cocktails
-                .Include(x=>x.CocktailIngredients)!.ThenInclude(y=>y.Ingredient)
+                .Include(x => x.CocktailIngredients)!.ThenInclude(y => y.Ingredient)
                 .SingleOrDefaultAsync(m => m.IdCocktail == id);
             if (cocktail == null)
             {
@@ -55,77 +55,51 @@ namespace CocktailPlanner.Controllers
             return View(viewModel);
         }
 
-
-        // GET: Cocktail/Create
-        // public IActionResult Create()
-        // {
-        //     return View();
-        // }
-        //
-        // // POST: Cocktail/Create
-        // // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        // public async Task<IActionResult> Create([Bind("IdCocktail,Name,Description,Image")] Cocktail cocktail)
-        // {
-        //     if (ModelState.IsValid)
-        //     {
-        //         _context.Add(cocktail);
-        //         await _context.SaveChangesAsync();
-        //         return RedirectToAction(nameof(Index));
-        //     }
-        //     
-        //     CocktailViewModel viewModel = CocktailViewModel.FromCocktail(cocktail);
-        //     return View(viewModel);
-        // }
-        
-public IActionResult Create()
-{
-    var ingredients = _context.Ingredients.ToList();
-    var viewModel = new CocktailCreateViewModel
-    {
-        Ingredients = ingredients
-    };
-    return View(viewModel);
-}
-
-[HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> Create(CocktailCreateViewModel viewModel)
-{
-    if (ModelState.IsValid)
-    {
-        var cocktail = new Cocktail
+        public IActionResult Create()
         {
-            Name = viewModel.Name,
-            Description = viewModel.Description,
-            Image = viewModel.Image
-        };
-        _context.Add(cocktail);
-        await _context.SaveChangesAsync();
-
-        // Add selected ingredients to the cocktail
-        for (int i = 0; i < viewModel.SelectedIngredientIds.Count; i++)
-        {
-            var ingredientId = viewModel.SelectedIngredientIds[i];
-            var cocktailIngredient = new CocktailIngredient
+            var ingredients = _context.Ingredients.ToList();
+            var viewModel = new CocktailCreateViewModel
             {
-                CocktailId = cocktail.IdCocktail,
-                IngredientId = ingredientId,
-                QuantityRequired = viewModel.QuantityRequired[i]
+                Ingredients = ingredients
             };
-            _context.Add(cocktailIngredient);
+            return View(viewModel);
         }
 
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
-    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CocktailCreateViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var cocktail = new Cocktail
+                {
+                    Name = viewModel.Name,
+                    Description = viewModel.Description,
+                    Image = viewModel.Image
+                };
+                _context.Add(cocktail);
+                await _context.SaveChangesAsync();
 
-    viewModel.Ingredients = _context.Ingredients.ToList();
-    return View(viewModel);
-}
+                // Add selected ingredients to the cocktail
+                for (int i = 0; i < viewModel.SelectedIngredientIds.Count; i++)
+                {
+                    var ingredientId = viewModel.SelectedIngredientIds[i];
+                    var cocktailIngredient = new CocktailIngredient
+                    {
+                        CocktailId = cocktail.IdCocktail,
+                        IngredientId = ingredientId,
+                        QuantityRequired = viewModel.QuantityRequired[i]
+                    };
+                    _context.Add(cocktailIngredient);
+                }
 
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            viewModel.Ingredients = _context.Ingredients.ToList();
+            return View(viewModel);
+        }
 
 
         // GET: Cocktail/Edit/5
@@ -141,6 +115,7 @@ public async Task<IActionResult> Create(CocktailCreateViewModel viewModel)
             {
                 return NotFound();
             }
+
             return View(cocktail);
         }
 
@@ -174,8 +149,10 @@ public async Task<IActionResult> Create(CocktailCreateViewModel viewModel)
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(cocktail);
         }
 
@@ -206,19 +183,20 @@ public async Task<IActionResult> Create(CocktailCreateViewModel viewModel)
             {
                 return Problem("Entity set 'CocktailPDbContext.Cocktails'  is null.");
             }
+
             var cocktail = await _context.Cocktails.FindAsync(id);
             if (cocktail != null)
             {
                 _context.Cocktails.Remove(cocktail);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CocktailExists(int id)
         {
-          return (_context.Cocktails?.Any(e => e.IdCocktail == id)).GetValueOrDefault();
+            return (_context.Cocktails?.Any(e => e.IdCocktail == id)).GetValueOrDefault();
         }
     }
 }

@@ -22,9 +22,9 @@ namespace CocktailPlanner.Controllers
         // GET: EventPlan
         public async Task<IActionResult> Index()
         {
-              return _context.EventPlans != null ? 
-                          View(await _context.EventPlans.ToListAsync()) :
-                          Problem("Entity set 'CocktailPDbContext.EventPlans'  is null.");
+            return _context.EventPlans != null
+                ? View(await _context.EventPlans.ToListAsync())
+                : Problem("Entity set 'CocktailPDbContext.EventPlans'  is null.");
         }
 
         // GET: EventPlan/Details/5
@@ -35,36 +35,68 @@ namespace CocktailPlanner.Controllers
                 return NotFound();
             }
 
+
             var eventPlan = await _context.EventPlans
-                .FirstOrDefaultAsync(m => m.IdEvent == id);
+                .Include(x => x.EventPlanCocktails)!.ThenInclude(y => y.Cocktail)
+                .SingleOrDefaultAsync(m => m.IdEvent == id);
+
             if (eventPlan == null)
             {
                 return NotFound();
             }
 
-            return View(eventPlan);
+            EventViewModel viewModel = EventViewModel.FromEventPlan(eventPlan);
+
+            return View(viewModel);
         }
 
         // GET: EventPlan/Create
         public IActionResult Create()
         {
-            return View();
+            var cocktails = _context.Cocktails.ToList();
+            var viewModel = new EventCreateViewModel
+            {
+                Cocktails = cocktails
+            };
+            return View(viewModel);
         }
 
         // POST: EventPlan/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdEvent,Title,Description,Date")] EventPlan eventPlan)
+        public async Task<IActionResult> Create(EventCreateViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
+                var eventPlan = new EventPlan
+                {
+                    Title = viewModel.Title,
+                    Description = viewModel.Description,
+                    Date = viewModel.Date
+                };
                 _context.Add(eventPlan);
+                await _context.SaveChangesAsync();
+
+                //Add selected cocktail to event
+                for (int i = 0; i < viewModel.SelectedCocktailIds.Count; i++)
+                {
+                    var cocktailId = viewModel.SelectedCocktailIds[i];
+                    var eventPlanCocktail = new EventPlanCocktail
+                    {
+                        EventPlanId = eventPlan.IdEvent,
+                        CocktailId = cocktailId,
+                        CocktailQuantity = viewModel.CocktailQuantity[i]
+                    };
+                    _context.Add(eventPlanCocktail);
+                }
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(eventPlan);
+
+            viewModel.Cocktails = _context.Cocktails.ToList();
+            return View(viewModel);
         }
 
         // GET: EventPlan/Edit/5
@@ -80,12 +112,12 @@ namespace CocktailPlanner.Controllers
             {
                 return NotFound();
             }
+
             return View(eventPlan);
         }
 
         // POST: EventPlan/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdEvent,Title,Description,Date")] EventPlan eventPlan)
@@ -113,8 +145,10 @@ namespace CocktailPlanner.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(eventPlan);
         }
 
@@ -145,19 +179,20 @@ namespace CocktailPlanner.Controllers
             {
                 return Problem("Entity set 'CocktailPDbContext.EventPlans'  is null.");
             }
+
             var eventPlan = await _context.EventPlans.FindAsync(id);
             if (eventPlan != null)
             {
                 _context.EventPlans.Remove(eventPlan);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool EventPlanExists(int id)
         {
-          return (_context.EventPlans?.Any(e => e.IdEvent == id)).GetValueOrDefault();
+            return (_context.EventPlans?.Any(e => e.IdEvent == id)).GetValueOrDefault();
         }
     }
 }
