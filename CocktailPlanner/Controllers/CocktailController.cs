@@ -26,6 +26,13 @@ namespace CocktailPlanner.Controllers
                           View(await _context.Cocktails.ToListAsync()) :
                           Problem("Entity set 'CocktailPDbContext.Cocktails'  is null.");
         }
+        
+        public async Task<IActionResult> Listview() 
+        {
+            return _context.Cocktails != null ? 
+                View(await _context.Cocktails.ToListAsync()) :
+                Problem("Entity set 'CocktailPDbContext.Cocktails'  is null.");
+        }
 
         // GET: Cocktail/Details/5
         public async Task<IActionResult> Details(int? id)
