@@ -3,6 +3,7 @@ using CocktailPlanner.DataLink;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CocktailPlanner.Migrations
 {
     [DbContext(typeof(CocktailPDbContext))]
-    partial class CocktailPDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230128182701_changedDatatypes")]
+    partial class changedDatatypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,9 +37,8 @@ namespace CocktailPlanner.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte>("Image")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -56,11 +58,10 @@ namespace CocktailPlanner.Migrations
                     b.Property<int>("IngredientId")
                         .HasColumnType("int");
 
-                    b.Property<string>("QuantityRequired")
-                        .IsRequired()
+                    b.Property<double>("QuantityRequired")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("0");
+                        .HasColumnType("float")
+                        .HasDefaultValue(0.0);
 
                     b.HasKey("CocktailId", "IngredientId");
 
@@ -133,10 +134,9 @@ namespace CocktailPlanner.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("QuantityAvailable")
-                        .IsRequired()
+                    b.Property<double>("QuantityAvailable")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("float");
 
                     b.Property<string>("Unit")
                         .IsRequired()

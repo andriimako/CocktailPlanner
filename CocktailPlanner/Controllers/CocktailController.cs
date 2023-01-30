@@ -20,7 +20,7 @@ namespace CocktailPlanner.Controllers
         }
 
         // GET: Cocktail
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index() 
         {
               return _context.Cocktails != null ? 
                           View(await _context.Cocktails.ToListAsync()) :
@@ -36,36 +36,90 @@ namespace CocktailPlanner.Controllers
             }
 
             var cocktail = await _context.Cocktails
-                .FirstOrDefaultAsync(m => m.IdCocktail == id);
+                .Include(x=>x.CocktailIngredients)!.ThenInclude(y=>y.Ingredient)
+                .SingleOrDefaultAsync(m => m.IdCocktail == id);
             if (cocktail == null)
             {
                 return NotFound();
             }
 
-            return View(cocktail);
+            CocktailViewModel viewModel = CocktailViewModel.FromCocktail(cocktail);
+
+            return View(viewModel);
         }
+
 
         // GET: Cocktail/Create
-        public IActionResult Create()
+        // public IActionResult Create()
+        // {
+        //     return View();
+        // }
+        //
+        // // POST: Cocktail/Create
+        // // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // [HttpPost]
+        // [ValidateAntiForgeryToken]
+        // public async Task<IActionResult> Create([Bind("IdCocktail,Name,Description,Image")] Cocktail cocktail)
+        // {
+        //     if (ModelState.IsValid)
+        //     {
+        //         _context.Add(cocktail);
+        //         await _context.SaveChangesAsync();
+        //         return RedirectToAction(nameof(Index));
+        //     }
+        //     
+        //     CocktailViewModel viewModel = CocktailViewModel.FromCocktail(cocktail);
+        //     return View(viewModel);
+        // }
+        
+public IActionResult Create()
+{
+    var ingredients = _context.Ingredients.ToList();
+    var viewModel = new CocktailCreateViewModel
+    {
+        Ingredients = ingredients
+    };
+    return View(viewModel);
+}
+
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Create(CocktailCreateViewModel viewModel)
+{
+    if (ModelState.IsValid)
+    {
+        var cocktail = new Cocktail
         {
-            return View();
+            Name = viewModel.Name,
+            Description = viewModel.Description,
+            Image = viewModel.Image
+        };
+        _context.Add(cocktail);
+        await _context.SaveChangesAsync();
+
+        // Add selected ingredients to the cocktail
+        for (int i = 0; i < viewModel.SelectedIngredientIds.Count; i++)
+        {
+            var ingredientId = viewModel.SelectedIngredientIds[i];
+            var cocktailIngredient = new CocktailIngredient
+            {
+                CocktailId = cocktail.IdCocktail,
+                IngredientId = ingredientId,
+                QuantityRequired = viewModel.QuantityRequired[i]
+            };
+            _context.Add(cocktailIngredient);
         }
 
-        // POST: Cocktail/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdCocktail,Name,Description,Image")] Cocktail cocktail)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(cocktail);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(cocktail);
-        }
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    viewModel.Ingredients = _context.Ingredients.ToList();
+    return View(viewModel);
+}
+
+
 
         // GET: Cocktail/Edit/5
         public async Task<IActionResult> Edit(int? id)

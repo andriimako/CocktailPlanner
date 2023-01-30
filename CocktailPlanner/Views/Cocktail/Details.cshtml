@@ -1,12 +1,11 @@
-@model CocktailPlanner.Models.Cocktail
+@model CocktailPlanner.Models.CocktailViewModel
 
 @{
-    ViewData["Title"] = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+ViewData["Title"] = "Details";
+Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Details</h1>
-
 <div>
     <h4>Cocktail</h4>
     <hr />
@@ -30,6 +29,41 @@
             @Html.DisplayFor(model => model.Image)
         </dd>
     </dl>
+</div>
+<div>
+    <h4>Ingredients</h4>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Unit
+        </th>
+        <th>
+            Amount
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.CocktailIngredients)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => item.Ingredient.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Ingredient.Unit)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.QuantityRequired)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.IdCocktail">Edit</a> |

@@ -9,14 +9,13 @@ public class Ingredient
     [Required]
     [MaxLength(255)]
     public string Name { get; set; }
-    [Required]
     [MaxLength(255)]
-    public double QuantityAvailable { get; set; }
+    public string QuantityAvailable { get; set; }
     [Required]
     [MaxLength(255)]
     public string Unit { get; set; }
     [Required]
     public Boolean IsAlcoholic { get; set; }
-    public ICollection<CocktailIngredient> CocktailIngredients { get; set; }
+    public ICollection<CocktailIngredient>? CocktailIngredients { get; set; }
         
 }

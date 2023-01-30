@@ -13,7 +13,7 @@ public class EventPlan
     public string Description { get; set; }
     [MaxLength(255)]
     public string Date { get; set; }
-    public ICollection<EventPlanCocktail> EventPlanCocktails { get; set; }
+    public ICollection<EventPlanCocktail>? EventPlanCocktails { get; set; }
     
     
 }

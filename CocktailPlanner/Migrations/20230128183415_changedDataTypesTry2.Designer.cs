@@ -3,6 +3,7 @@ using CocktailPlanner.DataLink;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CocktailPlanner.Migrations
 {
     [DbContext(typeof(CocktailPDbContext))]
-    partial class CocktailPDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230128183415_changedDataTypesTry2")]
+    partial class changedDataTypesTry2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
